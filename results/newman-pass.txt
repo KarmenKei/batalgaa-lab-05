@@ -1,0 +1,159 @@
+newman
+
+Lab 05 - Course Registration API
+
+❏ TC01 - Active student registers successfully
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC01 [200 OK, 178B, 71ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC01 [200 OK, 178B, 3ms]
+
+↳ Active student registers successfully
+  POST http://localhost:3000/registrations [201 Created, 202B, 3ms]
+  ✓  HTTP status is 201
+  ✓  result is OK
+  ✓  registrationID is a number
+
+❏ TC02 - Missing student returns ERROR_NO_STUDENT
+↳ Setup student
+  PUT http://localhost:3000/students/STU_OTHER_TC02 [200 OK, 178B, 3ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC02 [200 OK, 178B, 3ms]
+
+↳ Missing student returns ERROR_NO_STUDENT
+  POST http://localhost:3000/registrations [200 OK, 192B, 2ms]
+  ✓  HTTP status is 200
+  ✓  result is ERROR_NO_STUDENT
+
+❏ TC03 - Inactive student returns ERROR_INACTIVE_STUDENT
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC03 [200 OK, 178B, 1ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC03 [200 OK, 178B, 1ms]
+
+↳ Inactive student returns ERROR_INACTIVE_STUDENT
+  POST http://localhost:3000/registrations [200 OK, 198B, 1ms]
+  ✓  HTTP status is 200
+  ✓  result is ERROR_INACTIVE_STUDENT
+
+❏ TC04 - Missing course returns ERROR_NO_COURSE
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC04 [200 OK, 178B, 1ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_OTHER_TC04 [200 OK, 178B, 1ms]
+
+↳ Missing course returns ERROR_NO_COURSE
+  POST http://localhost:3000/registrations [200 OK, 191B, 1ms]
+  ✓  HTTP status is 200
+  ✓  result is ERROR_NO_COURSE
+
+❏ TC05 - Missing prerequisite returns ERROR_PREREQUISITES
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC05 [200 OK, 178B, 0µs]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC05 [200 OK, 178B, 1ms]
+
+↳ Missing prerequisite returns ERROR_PREREQUISITES
+  POST http://localhost:3000/registrations [200 OK, 215B, 1ms]
+  ✓  HTTP status is 200
+  ✓  result is ERROR_PREREQUISITES
+  ✓  missing includes CS201
+
+❏ TC06 - Missing studentID returns ERROR_BAD_REQUEST
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC06 [200 OK, 178B, 1ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC06 [200 OK, 178B, 1ms]
+
+↳ Missing studentID returns ERROR_BAD_REQUEST
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  ✓  HTTP status is 400
+  ✓  result is ERROR_BAD_REQUEST
+
+❏ TC07 - Missing courseID returns ERROR_BAD_REQUEST
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC07 [200 OK, 178B, 1ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC07 [200 OK, 178B, 1ms]
+
+↳ Missing courseID returns ERROR_BAD_REQUEST
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  ✓  HTTP status is 400
+  ✓  result is ERROR_BAD_REQUEST
+
+❏ TC08 - Course without prerequisites accepts student
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC08 [200 OK, 178B, 1ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC08 [200 OK, 178B, 1ms]
+
+↳ Course without prerequisites accepts student
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
+  ✓  HTTP status is 201
+  ✓  result is OK
+  ✓  registrationID is a number
+
+❏ TC09 - Empty coursesTaken fails required prerequisite
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC09 [200 OK, 178B, 3ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC09 [200 OK, 178B, 1ms]
+
+↳ Empty coursesTaken fails required prerequisite
+  POST http://localhost:3000/registrations [200 OK, 215B, 1ms]
+  ✓  HTTP status is 200
+  ✓  result is ERROR_PREREQUISITES
+  ✓  missing includes CS201
+
+❏ TC10 - Inactive student takes precedence over missing course
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC10 [200 OK, 178B, 1ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC10 [200 OK, 178B, 1ms]
+
+↳ Inactive student takes precedence over missing course
+  POST http://localhost:3000/registrations [200 OK, 198B, 1ms]
+  ✓  HTTP status is 200
+  ✓  result is ERROR_INACTIVE_STUDENT
+
+❏ TC11 - Malformed JSON returns ERROR_BAD_JSON
+↳ Setup student
+  PUT http://localhost:3000/students/STU_TC11 [200 OK, 178B, 2ms]
+
+↳ Setup course
+  PUT http://localhost:3000/courses/COURSE_TC11 [200 OK, 178B, 2ms]
+
+↳ Malformed JSON returns ERROR_BAD_JSON
+  POST http://localhost:3000/registrations [400 Bad Request, 199B, 3ms]
+  ✓  HTTP status is 400
+  ✓  result is ERROR_BAD_JSON
+
+┌─────────────────────────┬──────────────────┬─────────────────┐
+│                         │         executed │          failed │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│              iterations │                1 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│                requests │               33 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│            test-scripts │               11 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│      prerequest-scripts │                0 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│              assertions │               26 │               0 │
+├─────────────────────────┴──────────────────┴─────────────────┤
+│ total run duration: 462ms                                    │
+├──────────────────────────────────────────────────────────────┤
+│ total data received: 716B (approx)                           │
+├──────────────────────────────────────────────────────────────┤
+│ average response time: 3ms [min: 1ms, max: 71ms, s.d.: 12ms] │
+└──────────────────────────────────────────────────────────────┘
